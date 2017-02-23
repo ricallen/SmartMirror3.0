@@ -1,0 +1,8 @@
+top section:
+weather (icons)
+time
+date (multiple places?)
+calendar?
+
+bottom section:
+notes from tumblr api (https://www.tumblr.com/docs/en/api/v2)
