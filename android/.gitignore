@@ -7,4 +7,4 @@
 /build
 /captures
 
-android/app/src/main/java/smarter/smartmirror30/Values.java
+SmartMirror3.0/android/app/src/main/java/smarter/smartmirror30/Constants.java
