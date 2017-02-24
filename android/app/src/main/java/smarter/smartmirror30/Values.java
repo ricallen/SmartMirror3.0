@@ -9,11 +9,18 @@ import org.json.JSONObject;
  * Created by Ric on 23/02/2017.
  */
 public class Values {
-    public static Values instance;
-    public JSONObject weather;
-    public String forecast;
+    private static Values instance;
+    private JSONObject weather;
+    private String forecast;
+    private String temp;
+    private String joke;
+    private String punchline;
 
     private Values(){
+        forecast = "Retrieving...";
+        temp = "0";
+        joke = "What tea is often hard to swallow?";
+        punchline = "Reality";
 
     }
 
@@ -33,14 +40,42 @@ public class Values {
     }
 
     public String getForecast(){
-        try {
-            String forecast = weather.getJSONArray("weather").getJSONObject(0).getString("main");
-            Log.i("-->", "weather " + forecast);
-            return forecast;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (weather!=null) {
+            try {
+                forecast = weather.getJSONArray("weather").getJSONObject(0).getString("main").toUpperCase();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        return forecast;
     }
+
+    public String getTemp(){
+        if (weather!=null) {
+            try {
+                temp = weather.getJSONObject("main").getString("temp");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return temp;
+    }
+
+    public String getPunchline() {
+        return punchline;
+    }
+
+    public void setPunchline(String punchline) {
+        this.punchline = punchline;
+    }
+
+    public String getJoke() {
+        return joke;
+    }
+
+    public void setJoke(String joke) {
+        this.joke = joke;
+    }
+
 
 }
