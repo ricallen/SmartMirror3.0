@@ -20,31 +20,74 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello World!"
-                android:id="@+id/weatherTxt"
-                android:layout_centerInParent="true"
-                android:textSize="50sp"
-                android:textColor="@color/colorAccent"
-                android:layout_marginBottom="10sp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="temp"
-                android:id="@+id/tempTxt"
-                android:layout_centerInParent="true"
-                android:textSize="20sp"
-                android:textColor="@color/colorAccent"
-                android:layout_below="@+id/weatherTxt" />
+                <RelativeLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hello World!"
+                        android:id="@+id/weatherTxt"
+                        android:textSize="50sp"
+                        android:textColor="@color/colorAccent"
+                        android:layout_gravity="bottom|center_vertical"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="temp"
+                            android:id="@+id/tempTxt"
+                            android:layout_centerInParent="true"
+                            android:textSize="20sp"
+                            android:textColor="@color/colorAccent" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="wind"
+                            android:id="@+id/windTxt"
+                            android:layout_centerInParent="true"
+                            android:textSize="20sp"
+                            android:textColor="@color/colorAccent" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="0.7">
 
             <TextView
                 android:layout_width="wrap_content"

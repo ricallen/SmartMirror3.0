@@ -1,11 +1,5 @@
 package smarter.smartmirror30;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -22,22 +16,24 @@ import java.net.URLConnection;
  * Created by Ric on 23/02/2017.
  */
 public class WeatherGetter {
+
+    private double longitude;
+    private double latitude;
     public WeatherGetter() {
     }
 
-    public void getWeather(Context context) {
-        callAPI();
-    }
 
-    private JSONObject callAPI (){
+    public void getWeather (final double longitude, final double latitude){
+        this.longitude = longitude;
+        this.latitude = latitude;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 URL url;
 
                 try {
-                    String a="http://api.openweathermap.org/data/2.5/weather?lat=51.5299&lon=-0.1860" +
-                            "&units=metric&appid=" + Constants.weatherAPIkey;
+                    String a="http://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&lon="
+                            + longitude + "&units=metric&appid=" + Constants.weatherAPIkey;
                     url = new URL(a);
                     URLConnection conn = url.openConnection();
 
@@ -48,8 +44,8 @@ public class WeatherGetter {
                     while ((inputLine = br.readLine()) != null) {
                         JSONObject json = new JSONObject(inputLine);
                         Values values = Values.getInstance();
-                        values.setWeather(json);
-                        Log.i("-->", inputLine + "\n");
+                        values.setWeatherJSON(json);
+                        Log.i("-->", "in while loop: " + inputLine + "\n");
                     }
                     br.close();
 
@@ -62,6 +58,5 @@ public class WeatherGetter {
                 }
             }
         }).start();
-        return new JSONObject();
     }
 }
