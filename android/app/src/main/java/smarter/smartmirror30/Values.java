@@ -1,5 +1,8 @@
 package smarter.smartmirror30;
 
+import android.text.Html;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,6 +12,7 @@ import org.json.JSONObject;
 public class Values {
     private static Values instance;
     private JSONObject weatherJSON;
+    private JSONObject tumblrPostJSON;
     private String forecast;
     private String temp;
     private String[] wind;
@@ -40,10 +44,18 @@ public class Values {
         this.weatherJSON = weatherJSON;
     }
 
+    public JSONObject getTumblrPostJSON() {
+        return tumblrPostJSON;
+    }
+
+    public void setTumblrPostJSON(JSONObject tumblrPostJSON) {
+        this.tumblrPostJSON = tumblrPostJSON;
+    }
+
     public String getForecast(){
         if (weatherJSON !=null) {
             try {
-                forecast = weatherJSON.getJSONArray("weatherJSON").getJSONObject(0).getString("main").toUpperCase();
+                forecast = weatherJSON.getJSONArray("weather").getJSONObject(0).getString("main").toUpperCase();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -74,13 +86,31 @@ public class Values {
         return wind;
     }
 
-    public String getPunchline() { return punchline; }
+    public String getPunchline() {
+        if (tumblrPostJSON!=null){
+            try{
+                punchline = Html.fromHtml(tumblrPostJSON.getJSONObject("response").getJSONArray("posts")
+                        .getJSONObject(0).getString("body")).toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return punchline;
+    }
 
     public void setPunchline(String punchline) {
         this.punchline = punchline;
     }
 
     public String getJoke() {
+        if (tumblrPostJSON!=null){
+            try{
+                joke = Html.fromHtml(tumblrPostJSON.getJSONObject("response").getJSONArray("posts")
+                        .getJSONObject(0).getString("title")).toString();
+            } catch (JSONException e) {
+            e.printStackTrace();
+            }
+        }
         return joke;
     }
 

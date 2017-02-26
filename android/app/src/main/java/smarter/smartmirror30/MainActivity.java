@@ -10,23 +10,24 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.test.mock.MockPackageManager;
 import android.util.Log;
-import android.view.Window;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import org.json.JSONObject;
 
 import java.util.List;
 
 public class MainActivity extends Activity {
 
     private Values values;
-    private WeatherGetter weatherGetter;
+    private APIPuller aPIPuller;
     private LocationManager lm;
     private Location location;
+    private Handler handler;
+
+    private double longitude;
+    private double latitude;
 
     private TextView weather;
     private TextView temp;
@@ -41,13 +42,29 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         values = Values.getInstance();
-        weatherGetter = new WeatherGetter();
+        handler = new Handler();
+        aPIPuller = new APIPuller(handler);
+        lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        location = getLastKnownLocation();
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
         weather = (TextView)findViewById(R.id.weatherTxt);
         temp = (TextView) findViewById(R.id.tempTxt);
         wind = (TextView) findViewById(R.id.windTxt);
         joke = (TextView) findViewById(R.id.jokeTxt);
         punchline = (TextView) findViewById(R.id.punchlineTxt);
-        lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        aPIPuller.setWeatherListener(new APIPuller.WeatherListener() {
+            @Override
+            public void onWeatherPulled() {
+                updateValues();
+            }
+        });
+        aPIPuller.setTumblrPostListener(new APIPuller.TumblrPostListener() {
+            @Override
+            public void onTumblrPostPulled() {
+                updateValues();
+            }
+        });
     }
 
     @Override
@@ -59,26 +76,14 @@ public class MainActivity extends Activity {
                 requestForSpecificPermission();
             }
         }
-        location = getLastKnownLocation();
-        weather.setText(values.getForecast());
-        temp.setText(formatTemp(values.getTemp()));
-        wind.setText(formatWind(values.getWind()));
-        joke.setText(values.getPunchline());
-        punchline.setText(values.getJoke());
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
+        updateValues();
         Log.i("-->", "long " + longitude + ", lat " + latitude);
-        weatherGetter.getWeather(longitude, latitude);
-        final Handler h = new Handler();
-        h.postDelayed(new Runnable(){
-            public void run(){
-                h.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateValues();
-                    }
-                });
-                h.postDelayed(this, delay);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                aPIPuller.getWeather(longitude, latitude);
+                aPIPuller.getTumblrPosts();
+                handler.postDelayed(this, delay);
             }
         }, delay);
     }
