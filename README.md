@@ -8,7 +8,6 @@ Application uses weather from the [Met Office Datapoint](http://www.metoffice.go
 A contstants file must be generated in SmartMirror3.0/android/app/src/main/java/smarter/smartmirror30/Constants.java containing the users personal api keys. It must follow the general structure...
 ```java
 public class Constants {
-
     public static String tumblrName = "foo.tumblr.com";
     public static String tumblrAPIkey = "tumblrApiKeyString";
 
