@@ -14,8 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -29,11 +27,11 @@ public class MainActivity extends Activity {
     private double longitude;
     private double latitude;
 
-    private TextView weather;
     private TextView temp;
-    private TextView wind;
+    private TextView rainPercent;
     private TextView joke;
     private TextView punchline;
+    private TextView headlines[];
 
     private int delay = 5000;
 
@@ -48,11 +46,15 @@ public class MainActivity extends Activity {
         location = getLastKnownLocation();
         longitude = location.getLongitude();
         latitude = location.getLatitude();
-        weather = (TextView)findViewById(R.id.weatherTxt);
         temp = (TextView) findViewById(R.id.tempTxt);
-        wind = (TextView) findViewById(R.id.windTxt);
+        rainPercent = (TextView) findViewById(R.id.rainPercentTxt);
         joke = (TextView) findViewById(R.id.jokeTxt);
         punchline = (TextView) findViewById(R.id.punchlineTxt);
+        headlines = new TextView[4];
+        headlines[0] = (TextView) findViewById(R.id.headline1Txt);
+        headlines[1] = (TextView) findViewById(R.id.headline2Txt);
+        headlines[2] = (TextView) findViewById(R.id.headline3Txt);
+        headlines[3] = (TextView) findViewById(R.id.headline4Txt);
         aPIPuller.setWeatherListener(new APIPuller.WeatherListener() {
             @Override
             public void onWeatherPulled() {
@@ -62,6 +64,12 @@ public class MainActivity extends Activity {
         aPIPuller.setTumblrPostListener(new APIPuller.TumblrPostListener() {
             @Override
             public void onTumblrPostPulled() {
+                updateValues();
+            }
+        });
+        aPIPuller.setNewsPostListener(new APIPuller.NewsPostListener() {
+            @Override
+            public void onNewsPulled() {
                 updateValues();
             }
         });
@@ -83,25 +91,29 @@ public class MainActivity extends Activity {
             public void run() {
                 aPIPuller.getWeather(longitude, latitude);
                 aPIPuller.getTumblrPosts();
+                aPIPuller.getHeadlines();
                 handler.postDelayed(this, delay);
             }
         }, delay);
     }
 
-
+//add time + date method + convert weather to image + seperate update methods
     private void updateValues(){
-        weather.setText(values.getForecast());
         temp.setText(formatTemp(values.getTemp()));
-        wind.setText(formatWind(values.getWind()));
+        rainPercent.setText(formatRainPercent(values.getRainPercent()));
         joke.setText(values.getJoke());
         punchline.setText(values.getPunchline());
+        String[] headlineStrings = values.getHeadlines();
+        for (int i = 0; i<headlines.length; i++){
+            headlines[i].setText(headlineStrings[i]);
+        }
     }
 
-    private String formatTemp (String temp){
+    private String formatTemp (int temp){
         return temp + "°C";
     }
 
-    private String formatWind (String[] wind) {return wind[0] + "m/s: " + wind[1]; }
+    private String formatRainPercent (int rainPercent) {return rainPercent + "%"; }
 
     private boolean checkIfAlreadyhavePermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS);

@@ -1,8 +1,8 @@
 package smarter.smartmirror30;
 
 import android.text.Html;
-import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,23 +10,28 @@ import org.json.JSONObject;
  * Created by Ric on 23/02/2017.
  */
 public class Values {
+
     private static Values instance;
-    private JSONObject weatherJSON;
+
+
+    private JSONObject metOfficeJSON;
+    private int weatherCode;
+    private int temp;
+    private int rainPercent;
+
+    private JSONObject newsJSON;
+    private String[] headlines;
+
     private JSONObject tumblrPostJSON;
-    private String forecast;
-    private String temp;
-    private String[] wind;
     private String joke;
     private String punchline;
 
     private Values(){
-        forecast = "Retrieving...";
-        temp = "0";
-        wind = new String[2];
-        wind[0] = "0.0";
-        wind[1] = "000";
+        weatherCode = 0;
+        temp = 0;
         joke = "What tea is often hard to swallow?";
         punchline = "Reality";
+        headlines = new String[4];
     }
 
     public static Values getInstance (){
@@ -36,12 +41,12 @@ public class Values {
         return instance;
     }
 
-    public JSONObject getWeatherJSON() {
-        return weatherJSON;
+    public JSONObject getMetOfficeJSON() {
+        return metOfficeJSON;
     }
 
-    public void setWeatherJSON(JSONObject weatherJSON) {
-        this.weatherJSON = weatherJSON;
+    public void setMetOfficeJSON(JSONObject metOfficeJSON) {
+        this.metOfficeJSON = metOfficeJSON;
     }
 
     public JSONObject getTumblrPostJSON() {
@@ -52,21 +57,45 @@ public class Values {
         this.tumblrPostJSON = tumblrPostJSON;
     }
 
-    public String getForecast(){
-        if (weatherJSON !=null) {
+    public JSONObject getNewsJSON () {
+        return newsJSON;
+    }
+
+    public void setNewsJSON (JSONObject newsJSON){
+        this.newsJSON = newsJSON;
+        try {
+            JSONArray array = newsJSON.getJSONArray("articles");
+            for (int i = 0; i<4; i++){
+                headlines[i] = array.getJSONObject(i).getString("title");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String[] getHeadlines (){
+        return headlines;
+    }
+
+    public int getWeatherCode(){
+        if (metOfficeJSON !=null) {
             try {
-                forecast = weatherJSON.getJSONArray("weather").getJSONObject(0).getString("main").toUpperCase();
+                weatherCode = metOfficeJSON.getJSONObject("SiteRep").getJSONObject("DV").getJSONObject("Location")
+                        .getJSONArray("Period").getJSONObject(0).getJSONArray("Rep")
+                        .getJSONObject(0).getInt("W");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return forecast;
+        return weatherCode;
     }
 
-    public String getTemp(){
-        if (weatherJSON !=null) {
+    public int getTemp(){
+        if (metOfficeJSON !=null) {
             try {
-                temp = weatherJSON.getJSONObject("main").getString("temp");
+                temp = metOfficeJSON.getJSONObject("SiteRep").getJSONObject("DV").getJSONObject("Location")
+                        .getJSONArray("Period").getJSONObject(0).getJSONArray("Rep")
+                        .getJSONObject(0).getInt("FDm");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -74,16 +103,17 @@ public class Values {
         return temp;
     }
 
-    public String[] getWind(){
-        if (weatherJSON !=null) {
+    public int getRainPercent(){
+        if (metOfficeJSON !=null) {
             try {
-                wind[0] = weatherJSON.getJSONObject("wind").getString("speed");
-                wind[1] = weatherJSON.getJSONObject("wind").getString("deg");
+                rainPercent = metOfficeJSON.getJSONObject("SiteRep").getJSONObject("DV").getJSONObject("Location")
+                        .getJSONArray("Period").getJSONObject(0).getJSONArray("Rep")
+                        .getJSONObject(0).getInt("PPd");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return wind;
+        return rainPercent;
     }
 
     public String getPunchline() {
@@ -117,6 +147,5 @@ public class Values {
     public void setJoke(String joke) {
         this.joke = joke;
     }
-
 
 }

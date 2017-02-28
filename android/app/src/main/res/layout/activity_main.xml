@@ -3,85 +3,209 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="smarter.smartmirror30.MainActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:padding="30dp">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center">
 
-                <RelativeLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10th March"
+                    android:id="@+id/dateTxt"
+                    android:textSize="30dp"
+                    android:textColor="@color/colorAccent"
+                    android:textAlignment="center"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/timeTxt" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hello World!"
-                        android:id="@+id/weatherTxt"
-                        android:textSize="50sp"
-                        android:textColor="@color/colorAccent"
-                        android:layout_gravity="bottom|center_vertical"
-                        android:layout_alignParentLeft="false"
-                        android:layout_alignParentTop="false"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerInParent="true" />
-                </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20:22"
+                    android:id="@+id/timeTxt"
+                    android:textSize="30dp"
+                    android:textColor="@color/colorAccent"
+                    android:textAlignment="center"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="10dp" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="temp"
-                            android:id="@+id/tempTxt"
-                            android:layout_centerInParent="true"
-                            android:textSize="20sp"
-                            android:textColor="@color/colorAccent" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="wind"
-                            android:id="@+id/windTxt"
-                            android:layout_centerInParent="true"
-                            android:textSize="20sp"
-                            android:textColor="@color/colorAccent" />
-                    </RelativeLayout>
-                </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:gravity="center_vertical|right"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="temp"
+                    android:id="@+id/tempTxt"
+                    android:layout_centerInParent="true"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="rain %"
+                    android:id="@+id/rainPercentTxt"
+                    android:layout_centerInParent="true"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorAccent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/weatherImg"
+                    android:src="@drawable/soft_rain" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headlines"
+                android:id="@+id/newsTitleTxt"
+                android:textSize="30sp"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentTop="false"
+                android:textAlignment="center"
+                android:layout_alignParentLeft="false"
+                android:layout_marginBottom="5dp"
+                android:layout_toRightOf="@+id/newspaperImg1"
+                android:layout_marginLeft="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headline 1"
+                android:id="@+id/headline1Txt"
+                android:textSize="5dp"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentTop="false"
+                android:textAlignment="textStart"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@+id/newsTitleTxt"
+                android:layout_toRightOf="@+id/newspaperImg1"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headline 2"
+                android:id="@+id/headline2Txt"
+                android:textSize="5dp"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentTop="false"
+                android:textAlignment="center"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@+id/headline1Txt"
+                android:layout_toRightOf="@+id/newspaperImg2"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headline 3"
+                android:id="@+id/headline3Txt"
+                android:textSize="5dp"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentTop="false"
+                android:textAlignment="center"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@+id/headline2Txt"
+                android:layout_toRightOf="@+id/newspaperImg3"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headline 4"
+                android:id="@+id/headline4Txt"
+                android:textSize="5dp"
+                android:textColor="@color/colorAccent"
+                android:layout_alignParentTop="false"
+                android:textAlignment="center"
+                android:layout_alignParentLeft="false"
+                android:layout_below="@+id/headline3Txt"
+                android:layout_toRightOf="@+id/newspaperImg3"
+                android:layout_margin="5dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/newspaperImg1"
+                android:src="@drawable/newspaper"
+                android:layout_alignTop="@+id/headline1Txt"
+                android:layout_alignBottom="@+id/headline1Txt" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/newspaperImg2"
+                android:src="@drawable/newspaper"
+                android:layout_alignTop="@+id/headline2Txt"
+                android:layout_alignBottom="@+id/headline2Txt" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/newspaperImg3"
+                android:src="@drawable/newspaper"
+                android:layout_alignTop="@+id/headline3Txt"
+                android:layout_alignBottom="@+id/headline3Txt" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/newspaperImg4"
+                android:src="@drawable/newspaper"
+                android:layout_alignTop="@+id/headline4Txt"
+                android:layout_alignBottom="@+id/headline4Txt" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -90,21 +214,20 @@
             android:layout_weight="0.7">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="What tea is often hard to swallow?"
                 android:id="@+id/jokeTxt"
                 android:layout_centerInParent="true"
                 android:textSize="30sp"
                 android:textColor="@color/colorAccent"
-                android:layout_marginBottom="30sp"
-                android:layout_marginTop="20sp"
+                android:layout_marginBottom="20dp"
                 android:layout_alignParentTop="true"
-                android:textAlignment="center" />
+                android:textAlignment="textStart" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:text="Reality"
                 android:id="@+id/punchlineTxt"
                 android:layout_centerInParent="true"
@@ -112,5 +235,6 @@
                 android:textColor="@color/colorAccent"
                 android:layout_below="@+id/jokeTxt" />
         </RelativeLayout>
+
     </LinearLayout>
 </RelativeLayout>
