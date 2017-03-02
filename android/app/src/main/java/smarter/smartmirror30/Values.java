@@ -19,9 +19,6 @@ public class Values {
     private int temp;
     private int rainPercent;
 
-    private JSONObject newsJSON1;
-    private JSONObject newsJSON2;
-    private JSONObject newsJSON3;
     private String[] headlines1;
     private String[] headlines2;
     private String[] headlines3;
@@ -47,14 +44,16 @@ public class Values {
         return instance;
     }
 
-
     public void setMetOfficeJSON(JSONObject metOfficeJSON) {
         this.metOfficeJSON = metOfficeJSON;
     }
 
-
     public void setTumblrPostJSON(JSONObject tumblrPostJSON) {
         this.tumblrPostJSON = tumblrPostJSON;
+    }
+
+    public JSONObject getTumblrPostJSON(){
+        return tumblrPostJSON;
     }
 
     public void setNewsJSON1 (JSONObject newsJSON){
@@ -135,38 +134,6 @@ public class Values {
             }
         }
         return rainPercent;
-    }
-
-    public String getPunchline() {
-        if (tumblrPostJSON!=null){
-            try{
-                punchline = Html.fromHtml(tumblrPostJSON.getJSONObject("response").getJSONArray("posts")
-                        .getJSONObject(0).getString("body")).toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return punchline;
-    }
-
-    public void setPunchline(String punchline) {
-        this.punchline = punchline;
-    }
-
-    public String getJoke() {
-        if (tumblrPostJSON!=null){
-            try{
-                joke = Html.fromHtml(tumblrPostJSON.getJSONObject("response").getJSONArray("posts")
-                        .getJSONObject(0).getString("title")).toString();
-            } catch (JSONException e) {
-            e.printStackTrace();
-            }
-        }
-        return joke;
-    }
-
-    public void setJoke(String joke) {
-        this.joke = joke;
     }
 
 }

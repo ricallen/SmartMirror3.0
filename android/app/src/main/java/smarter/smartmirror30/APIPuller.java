@@ -96,8 +96,8 @@ public class APIPuller {
     }
 
     public void getTumblrPosts (){
-        String a="https://api.tumblr.com/v2/blog/" + Constants.tumblrName +
-                "/posts/text?api_key=" + Constants.tumblrAPIkey;
+        String a= Constants.tumblrURL1 + Constants.tumblrName +
+                Constants.tumblrURL2 + Constants.tumblrAPIkey;
         connectToURL(a, 1);
     }
 

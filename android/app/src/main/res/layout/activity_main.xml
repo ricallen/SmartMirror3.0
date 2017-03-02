@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="smarter.smartmirror30.MainActivity"
     android:background="@color/colorPrimary"
-    android:padding="30dp">
+    android:padding="15dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,7 +22,7 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:gravity="center">
 
                 <TextView
@@ -59,34 +59,61 @@
                 android:gravity="center_vertical|right"
                 android:layout_margin="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="temp"
-                    android:id="@+id/tempTxt"
-                    android:layout_centerInParent="true"
-                    android:textSize="@dimen/textview_body"
-                    android:textColor="@color/colorAccent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="5dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="rain %"
-                    android:id="@+id/rainPercentTxt"
-                    android:layout_centerInParent="true"
-                    android:textSize="@dimen/textview_body"
-                    android:textColor="@color/colorAccent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="temp"
+                        android:id="@+id/tempTxt"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/textview_body"
+                        android:textColor="@color/colorAccent"
+                        android:layout_alignParentLeft="false"
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignParentRight="true" />
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:id="@+id/imageView5"
+                        android:src="@drawable/temp"
+                        android:layout_centerVertical="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="rain %"
+                        android:id="@+id/rainPercentTxt"
+                        android:layout_centerInParent="true"
+                        android:textSize="@dimen/textview_body"
+                        android:textColor="@color/colorAccent"
+                        android:layout_alignParentLeft="false"
+                        android:layout_marginTop="10dp"
+                        android:layout_alignParentRight="true" />
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_size"
+                        android:layout_height="@dimen/icon_size"
+                        android:id="@+id/imageView6"
+                        android:src="@drawable/umbrella"
+                        android:layout_centerVertical="true" />
+                </RelativeLayout>
             </LinearLayout>
 
             <RelativeLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:padding="5dp">
 
@@ -96,12 +123,6 @@
                     android:id="@+id/weatherImg"
                     android:src="@drawable/soft_rain" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CODE"
-                    android:id="@+id/weatherCodeTxt"
-                    android:textColor="@color/colorAccent" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -126,7 +147,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="What tea is often hard to swallow?"
+                android:text="Test Header"
                 android:id="@+id/jokeTxt"
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/textview_header"
@@ -135,15 +156,11 @@
                 android:layout_alignParentTop="true"
                 android:textAlignment="textStart" />
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Reality"
-                android:id="@+id/punchlineTxt"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/textview_body"
-                android:textColor="@color/colorAccent"
-                android:layout_below="@+id/jokeTxt" />
+                android:layout_below="@+id/jokeTxt"
+                android:id="@+id/bodyRelLayout"></RelativeLayout>
         </RelativeLayout>
 
     </LinearLayout>

@@ -1,7 +1,6 @@
 package smarter.smartmirror30;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,20 +11,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends FragmentActivity {
 
@@ -45,15 +41,15 @@ public class MainActivity extends FragmentActivity {
 
     private TextView date;
     private TextView time;
-    private TextView weatherCode;
+    private ImageView weather;
     private TextView temp;
     private TextView rainPercent;
-    private TextView joke;
-    private TextView punchline;
+    private TextView header;
+    private RelativeLayout bodyLayout;
 
-    private int delay = 10000;
-    private int timeAndDateDelay = 200;
-    private int viewPagerDelay = 5000;
+    private int delay = 30000;
+    private int timeAndDateDelay = 300;
+    private int viewPagerDelay = 30000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +58,8 @@ public class MainActivity extends FragmentActivity {
         values = Values.getInstance();
         handler = new Handler();
         aPIPuller = new APIPuller(handler);
-        locationCheck();
-        setUpTextViews();
+//        locationCheck();
+        setUpViews();
         setUpViewPager();
         aPIPuller.setWeatherListener(new APIPuller.WeatherListener() {
             @Override
@@ -98,7 +94,6 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         Log.i("-->", "long " + longitude + ", lat " + latitude);
         handler.post(new Runnable() {
             @Override
@@ -139,26 +134,33 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-//convert weather to image
 
     private void updateWeather(){
         temp.setText(formatTemp(values.getTemp()));
         rainPercent.setText(formatRainPercent(values.getRainPercent()));
-        weatherCode.setText(String.valueOf(values.getWeatherCode()));
+        WeatherImageGetter weatherImageGetter = new WeatherImageGetter();
+        String drawableName = weatherImageGetter.getImage(values.getWeatherCode());
+        Log.i("-->", drawableName);
+        int drawable = getResources().getIdentifier(drawableName, "drawable", this.getPackageName());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            weather.setImageDrawable(getResources().getDrawable(drawable, getApplicationContext().getTheme()));
+        } else {
+            weather.setImageDrawable(getResources().getDrawable(drawable));
+        }
     }
 
     private void updateNote(){
-        joke.setText(values.getJoke());
-        punchline.setText(values.getPunchline());
+        TumblrNoteCreator tumblrNoteCreator = new TumblrNoteCreator(header, bodyLayout, this, handler);
+        tumblrNoteCreator.createTumblrNoteLayout(values.getTumblrPostJSON());
     }
 
     private void updateTimeAndDate(){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", getResources().getConfiguration().locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM", getResources().getConfiguration().locale);
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
         date.setText(dateFormat.format(c.getTime()));
         time.setText(timeFormat.format(c.getTime()));
-        Log.i("-->", dateFormat.format(c.getTime()) + " " + timeFormat.format(c.getTime()));
     }
 
     private void locationCheck(){
@@ -183,14 +185,14 @@ public class MainActivity extends FragmentActivity {
         businessNewsFragment = NewsFragment.newInstance();
     }
 
-    private void setUpTextViews(){
+    private void setUpViews(){
         date = (TextView) findViewById(R.id.dateTxt);
         time = (TextView) findViewById(R.id.timeTxt);
         temp = (TextView) findViewById(R.id.tempTxt);
         rainPercent = (TextView) findViewById(R.id.rainPercentTxt);
-        joke = (TextView) findViewById(R.id.jokeTxt);
-        punchline = (TextView) findViewById(R.id.punchlineTxt);
-        weatherCode = (TextView) findViewById(R.id.weatherCodeTxt);
+        weather = (ImageView) findViewById(R.id.weatherImg);
+        header = (TextView) findViewById(R.id.jokeTxt);
+        bodyLayout = (RelativeLayout) findViewById(R.id.bodyRelLayout);
     }
 
     private String formatTemp (int temp){
