@@ -19,8 +19,12 @@ public class Values {
     private int temp;
     private int rainPercent;
 
-    private JSONObject newsJSON;
-    private String[] headlines;
+    private JSONObject newsJSON1;
+    private JSONObject newsJSON2;
+    private JSONObject newsJSON3;
+    private String[] headlines1;
+    private String[] headlines2;
+    private String[] headlines3;
 
     private JSONObject tumblrPostJSON;
     private String joke;
@@ -29,9 +33,11 @@ public class Values {
     private Values(){
         weatherCode = 0;
         temp = 0;
-        joke = "What tea is often hard to swallow?";
-        punchline = "Reality";
-        headlines = new String[4];
+        joke = "Test Headline";
+        punchline = "Test Body";
+        headlines1 = new String[4];
+        headlines2 = new String[4];
+        headlines3 = new String[4];
     }
 
     public static Values getInstance (){
@@ -41,40 +47,55 @@ public class Values {
         return instance;
     }
 
-    public JSONObject getMetOfficeJSON() {
-        return metOfficeJSON;
-    }
 
     public void setMetOfficeJSON(JSONObject metOfficeJSON) {
         this.metOfficeJSON = metOfficeJSON;
     }
 
-    public JSONObject getTumblrPostJSON() {
-        return tumblrPostJSON;
-    }
 
     public void setTumblrPostJSON(JSONObject tumblrPostJSON) {
         this.tumblrPostJSON = tumblrPostJSON;
     }
 
-    public JSONObject getNewsJSON () {
-        return newsJSON;
-    }
-
-    public void setNewsJSON (JSONObject newsJSON){
-        this.newsJSON = newsJSON;
+    public void setNewsJSON1 (JSONObject newsJSON){
         try {
             JSONArray array = newsJSON.getJSONArray("articles");
             for (int i = 0; i<4; i++){
-                headlines[i] = array.getJSONObject(i).getString("title");
+                headlines1[i] = array.getJSONObject(i).getString("title");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setNewsJSON2 (JSONObject newsJSON){
+        try {
+            JSONArray array = newsJSON.getJSONArray("articles");
+            for (int i = 0; i<4; i++){
+                headlines2[i] = array.getJSONObject(i).getString("title");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setNewsJSON3 (JSONObject newsJSON){
+        try {
+            JSONArray array = newsJSON.getJSONArray("articles");
+            for (int i = 0; i<4; i++){
+                headlines3[i] = array.getJSONObject(i).getString("title");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public String[] getHeadlines (){
-        return headlines;
+    public String[] getHeadlines1 (){
+        return headlines1;
+    }
+    public String[] getHeadlines2 (){
+        return headlines2;
+    }
+    public String[] getHeadlines3 (){
+        return headlines3;
     }
 
     public int getWeatherCode(){

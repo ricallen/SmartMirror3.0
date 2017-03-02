@@ -9,14 +9,25 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private Values values;
     private APIPuller aPIPuller;
@@ -24,16 +35,25 @@ public class MainActivity extends Activity {
     private Location location;
     private Handler handler;
 
+    private ViewPager viewPager;
+    private NewsFragment bbcNewsFragment;
+    private NewsFragment sportsNewsFragment;
+    private NewsFragment businessNewsFragment;
+
     private double longitude;
     private double latitude;
 
+    private TextView date;
+    private TextView time;
+    private TextView weatherCode;
     private TextView temp;
     private TextView rainPercent;
     private TextView joke;
     private TextView punchline;
-    private TextView headlines[];
 
-    private int delay = 5000;
+    private int delay = 10000;
+    private int timeAndDateDelay = 200;
+    private int viewPagerDelay = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,35 +62,35 @@ public class MainActivity extends Activity {
         values = Values.getInstance();
         handler = new Handler();
         aPIPuller = new APIPuller(handler);
-        lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        location = getLastKnownLocation();
-        longitude = location.getLongitude();
-        latitude = location.getLatitude();
-        temp = (TextView) findViewById(R.id.tempTxt);
-        rainPercent = (TextView) findViewById(R.id.rainPercentTxt);
-        joke = (TextView) findViewById(R.id.jokeTxt);
-        punchline = (TextView) findViewById(R.id.punchlineTxt);
-        headlines = new TextView[4];
-        headlines[0] = (TextView) findViewById(R.id.headline1Txt);
-        headlines[1] = (TextView) findViewById(R.id.headline2Txt);
-        headlines[2] = (TextView) findViewById(R.id.headline3Txt);
-        headlines[3] = (TextView) findViewById(R.id.headline4Txt);
+        locationCheck();
+        setUpTextViews();
+        setUpViewPager();
         aPIPuller.setWeatherListener(new APIPuller.WeatherListener() {
             @Override
             public void onWeatherPulled() {
-                updateValues();
+                updateWeather();
             }
         });
         aPIPuller.setTumblrPostListener(new APIPuller.TumblrPostListener() {
             @Override
             public void onTumblrPostPulled() {
-                updateValues();
+                updateNote();
             }
         });
         aPIPuller.setNewsPostListener(new APIPuller.NewsPostListener() {
             @Override
-            public void onNewsPulled() {
-                updateValues();
+            public void onNewsPulled(int i) {
+                switch (i){
+                    case 1:
+                        bbcNewsFragment.updateNews(values.getHeadlines1());
+                        break;
+                    case 2:
+                        sportsNewsFragment.updateNews(values.getHeadlines2());
+                        break;
+                    case 3:
+                        businessNewsFragment.updateNews(values.getHeadlines3());
+                        break;
+                }
             }
         });
     }
@@ -78,35 +98,99 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        Log.i("-->", "long " + longitude + ", lat " + latitude);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                aPIPuller.getWeather();
+                aPIPuller.getTumblrPosts();
+                aPIPuller.getHeadlines(Constants.newsSourceArray[0], Constants.newsSourceArray[1]
+                        , Constants.newsSourceArray[5]);
+                handler.postDelayed(this, delay);
+            }
+        });
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                updateTimeAndDate();
+                handler.postDelayed(this, timeAndDateDelay);
+            }
+        });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (viewPager.getCurrentItem()<2) {
+                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+                }
+                else {
+                    viewPager.setCurrentItem(0);
+                }
+                handler.postDelayed(this, viewPagerDelay);
+            }
+        }, viewPagerDelay);
+    }
+
+    @Override
+    protected void onDestroy() {
+        aPIPuller.removeNewsPostListener();
+        aPIPuller.removeOnWeatherPulled();
+        aPIPuller.removeTumblrPostListener();
+        super.onDestroy();
+    }
+
+//convert weather to image
+
+    private void updateWeather(){
+        temp.setText(formatTemp(values.getTemp()));
+        rainPercent.setText(formatRainPercent(values.getRainPercent()));
+        weatherCode.setText(String.valueOf(values.getWeatherCode()));
+    }
+
+    private void updateNote(){
+        joke.setText(values.getJoke());
+        punchline.setText(values.getPunchline());
+    }
+
+    private void updateTimeAndDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", getResources().getConfiguration().locale);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
+        date.setText(dateFormat.format(c.getTime()));
+        time.setText(timeFormat.format(c.getTime()));
+        Log.i("-->", dateFormat.format(c.getTime()) + " " + timeFormat.format(c.getTime()));
+    }
+
+    private void locationCheck(){
         int MyVersion = Build.VERSION.SDK_INT;
         if (MyVersion > Build.VERSION_CODES.LOLLIPOP_MR1) {
             if (!checkIfAlreadyhavePermission()) {
                 requestForSpecificPermission();
             }
         }
-        updateValues();
-        Log.i("-->", "long " + longitude + ", lat " + latitude);
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                aPIPuller.getWeather(longitude, latitude);
-                aPIPuller.getTumblrPosts();
-                aPIPuller.getHeadlines();
-                handler.postDelayed(this, delay);
-            }
-        }, delay);
+        lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        location = getLastKnownLocation();
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
     }
 
-//add time + date method + convert weather to image + seperate update methods
-    private void updateValues(){
-        temp.setText(formatTemp(values.getTemp()));
-        rainPercent.setText(formatRainPercent(values.getRainPercent()));
-        joke.setText(values.getJoke());
-        punchline.setText(values.getPunchline());
-        String[] headlineStrings = values.getHeadlines();
-        for (int i = 0; i<headlines.length; i++){
-            headlines[i].setText(headlineStrings[i]);
-        }
+    private void setUpViewPager(){
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        viewPager.setOffscreenPageLimit(3);
+        bbcNewsFragment = NewsFragment.newInstance();
+        sportsNewsFragment = NewsFragment.newInstance();
+        businessNewsFragment = NewsFragment.newInstance();
+    }
+
+    private void setUpTextViews(){
+        date = (TextView) findViewById(R.id.dateTxt);
+        time = (TextView) findViewById(R.id.timeTxt);
+        temp = (TextView) findViewById(R.id.tempTxt);
+        rainPercent = (TextView) findViewById(R.id.rainPercentTxt);
+        joke = (TextView) findViewById(R.id.jokeTxt);
+        punchline = (TextView) findViewById(R.id.punchlineTxt);
+        weatherCode = (TextView) findViewById(R.id.weatherCodeTxt);
     }
 
     private String formatTemp (int temp){
@@ -159,6 +243,28 @@ public class MainActivity extends Activity {
             }
         }
         return bestLocation;
+    }
+
+    class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fragmentManager){
+            super(fragmentManager);
+
+        }
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            switch(position){
+                case 0: return bbcNewsFragment;
+                case 1: return sportsNewsFragment;
+                case 2: return businessNewsFragment;
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 
 }

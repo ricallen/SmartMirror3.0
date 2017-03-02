@@ -1,0 +1,101 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="smarter.smartmirror30.NewsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/imageView"
+            android:src="@drawable/newspaper"
+            android:layout_alignTop="@+id/headlineTxt1"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="false" />
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/imageView2"
+            android:src="@drawable/newspaper"
+            android:layout_alignTop="@+id/headlineTxt2" />
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/imageView3"
+            android:src="@drawable/newspaper"
+            android:layout_alignTop="@+id/headlineTxt3" />
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/imageView4"
+            android:src="@drawable/newspaper"
+            android:layout_alignTop="@+id/headlineTxt4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Headline 1"
+            android:id="@+id/headlineTxt1"
+            android:textSize="@dimen/textview_body"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentTop="false"
+            android:textAlignment="textStart"
+            android:layout_alignParentLeft="false"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Headline 2"
+            android:id="@+id/headlineTxt2"
+            android:textSize="@dimen/textview_body"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentTop="false"
+            android:textAlignment="textStart"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/headlineTxt1"
+            android:layout_toRightOf="@+id/imageView2"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Headline 3"
+            android:id="@+id/headlineTxt3"
+            android:textSize="@dimen/textview_body"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentTop="false"
+            android:textAlignment="textStart"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/headlineTxt2"
+            android:layout_toRightOf="@+id/imageView3"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Headline 4"
+            android:id="@+id/headlineTxt4"
+            android:textSize="@dimen/textview_body"
+            android:textColor="@color/colorAccent"
+            android:layout_alignParentTop="false"
+            android:textAlignment="textStart"
+            android:layout_alignParentLeft="false"
+            android:layout_below="@+id/headlineTxt3"
+            android:layout_toRightOf="@+id/imageView3"
+            android:layout_margin="5dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

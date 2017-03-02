@@ -29,6 +29,108 @@ public class APIPuller {
         this.handler = handler;
     }
 
+    public void connectToURL(final String a, final int type){
+        final URLConnectionListener urlConnectionListener = new URLConnectionListener() {
+            @Override
+            public void onURLConnectionCompleted(int type, JSONObject jsonObject) {
+                switch (type){ //0 - weather, 1 - tumblr, 2 - news1, 3 - news2, 4 - news3
+                    case 0: values.setMetOfficeJSON(jsonObject);
+                        weatherListener.onWeatherPulled();
+                        break;
+                    case 1: values.setTumblrPostJSON(jsonObject);
+                        tumblrPostListener.onTumblrPostPulled();
+                        break;
+                    case 2: values.setNewsJSON1(jsonObject);
+                        newsPostListener.onNewsPulled(1);
+                        break;
+                    case 3: values.setNewsJSON2(jsonObject);
+                        newsPostListener.onNewsPulled(2);
+                        break;
+                    case 4: values.setNewsJSON3(jsonObject);
+                        newsPostListener.onNewsPulled(3);
+                        break;
+                }
+            }
+        };
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                URL url;
+                try {
+                    url = new URL(a);
+                    URLConnection conn = url.openConnection();
+
+                    BufferedReader br = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream()));
+
+                    String inputLine;
+                    JSONObject jsonObject = new JSONObject();
+                    while ((inputLine = br.readLine()) != null) {
+                        jsonObject = new JSONObject(inputLine);
+                        Log.i("-->", "in while loop: " + inputLine + "\n");
+                    }
+                    br.close();
+                    final JSONObject finalJsonObject = jsonObject;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            urlConnectionListener.onURLConnectionCompleted(type, finalJsonObject);
+                        }
+                    });
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public void getWeather (){
+        String a= Constants.metOfficeURL1 + Constants.metOfficeLocationID + Constants.metOfficeURL2
+                + Constants.metOfficeAPIkey;
+        connectToURL(a, 0);
+    }
+
+    public void getTumblrPosts (){
+        String a="https://api.tumblr.com/v2/blog/" + Constants.tumblrName +
+                "/posts/text?api_key=" + Constants.tumblrAPIkey;
+        connectToURL(a, 1);
+    }
+
+    public void getHeadlines (final String source1, final String source2, final String source3){
+        String a= Constants.newsURL1 + source1
+                + Constants.newsURL2 + Constants.newsAPIkey;
+        connectToURL(a, 2);
+
+        a= Constants.newsURL1 + source2
+                + Constants.newsURL2 + Constants.newsAPIkey;
+        connectToURL(a, 3);
+
+        a= Constants.newsURL1 + source3
+                + Constants.newsURL2 + Constants.newsAPIkey;
+        connectToURL(a, 4);
+    }
+
+    public interface WeatherListener {
+        void onWeatherPulled();
+    }
+
+    public interface TumblrPostListener {
+        void onTumblrPostPulled();
+    }
+
+    public interface NewsPostListener {
+        void onNewsPulled(int i);
+    }
+
+    public interface URLConnectionListener{
+        void onURLConnectionCompleted(int type, JSONObject jsonObject);
+    }
+
     public void setWeatherListener(WeatherListener weatherListener){
         this.weatherListener = weatherListener;
     }
@@ -53,128 +155,4 @@ public class APIPuller {
         newsPostListener = null;
     }
 
-    public void getWeather (final double longitude, final double latitude){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url;
-                try {
-                    String a= Constants.metOfficeURL1 + Constants.metOfficeLocationID + Constants.metOfficeURL2
-                            + Constants.metOfficeAPIkey;
-                    url = new URL(a);
-                    URLConnection conn = url.openConnection();
-
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
-
-                    String inputLine;
-                    while ((inputLine = br.readLine()) != null) {
-                        JSONObject json = new JSONObject(inputLine);
-                        values.setMetOfficeJSON(json);
-                        Log.i("-->", "in while loop: " + inputLine + "\n");
-                    }
-                    br.close();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            weatherListener.onWeatherPulled();
-                        }
-                    });
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public void getTumblrPosts (){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url;
-                try {
-                    String a="https://api.tumblr.com/v2/blog/" + Constants.tumblrName +
-                            "/posts/text?api_key=" + Constants.tumblrAPIkey;
-                    url = new URL(a);
-                    URLConnection conn = url.openConnection();
-
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
-
-                    String inputLine;
-                    while ((inputLine = br.readLine()) != null) {
-                        JSONObject json = new JSONObject(inputLine);
-                        values.setTumblrPostJSON(json);
-                        Log.i("-->", "in while loop: " + inputLine + "\n");
-                    }
-                    br.close();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            tumblrPostListener.onTumblrPostPulled();
-                        }
-                    });
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public void getHeadlines (){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                URL url;
-                try {
-                    String a= Constants.newsURL + Constants.newsAPIkey;
-                    url = new URL(a);
-                    URLConnection conn = url.openConnection();
-
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
-
-                    String inputLine;
-                    while ((inputLine = br.readLine()) != null) {
-                        JSONObject json = new JSONObject(inputLine);
-                        values.setNewsJSON(json);
-                        Log.i("-->", "in while loop: " + inputLine + "\n");
-                    }
-                    br.close();
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            newsPostListener.onNewsPulled();
-                        }
-                    });
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public interface WeatherListener {
-        void onWeatherPulled();
-    }
-
-    public interface TumblrPostListener {
-        void onTumblrPostPulled();
-    }
-
-    public interface NewsPostListener {
-        void onNewsPulled();
-    }
 }
