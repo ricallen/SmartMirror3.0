@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="smarter.smartmirror30.MainActivity"
     android:background="@color/colorPrimary"
-    android:padding="30dp">
+    android:padding="50dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,30 +23,30 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2.5"
-                android:gravity="center">
+                android:gravity="left|center_vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10th March"
+                    android:text="10 Mar"
                     android:id="@+id/dateTxt"
-                    android:textSize="@dimen/textview_header"
+                    android:textSize="@dimen/time_date_size"
                     android:textColor="@color/colorAccent"
                     android:textAlignment="center"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/timeTxt" />
+                    android:layout_below="@+id/timeTxt"
+                    android:layout_marginBottom="20dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="20:22"
                     android:id="@+id/timeTxt"
-                    android:textSize="@dimen/textview_header"
+                    android:textSize="@dimen/time_date_size"
                     android:textColor="@color/colorAccent"
                     android:textAlignment="center"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_centerInParent="true" />
 
             </LinearLayout>
 
@@ -54,7 +54,7 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.8"
                 android:padding="10dp"
                 android:gravity="center_vertical|right"
                 android:layout_margin="10dp">
@@ -62,7 +62,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -70,10 +70,9 @@
                         android:text="temp"
                         android:id="@+id/tempTxt"
                         android:layout_centerInParent="true"
-                        android:textSize="@dimen/textview_body"
+                        android:textSize="@dimen/textview_body_size"
                         android:textColor="@color/colorAccent"
                         android:layout_alignParentLeft="false"
-                        android:layout_marginBottom="10dp"
                         android:layout_alignParentRight="true" />
 
                     <ImageView
@@ -86,7 +85,8 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -94,10 +94,9 @@
                         android:text="rain %"
                         android:id="@+id/rainPercentTxt"
                         android:layout_centerInParent="true"
-                        android:textSize="@dimen/textview_body"
+                        android:textSize="@dimen/textview_body_size"
                         android:textColor="@color/colorAccent"
                         android:layout_alignParentLeft="false"
-                        android:layout_marginTop="10dp"
                         android:layout_alignParentRight="true" />
 
                     <ImageView
@@ -149,12 +148,13 @@
                 android:layout_height="wrap_content"
                 android:text="Test Header"
                 android:id="@+id/jokeTxt"
-                android:layout_centerInParent="true"
-                android:textSize="@dimen/textview_header"
+                android:textSize="@dimen/textview_header_size"
                 android:textColor="@color/colorAccent"
                 android:layout_marginBottom="20dp"
                 android:layout_alignParentTop="true"
-                android:textAlignment="textStart" />
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="false"
+                android:layout_centerInParent="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

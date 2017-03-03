@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -117,6 +118,8 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void run() {
                 updateTimeAndDate();
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
                 handler.postDelayed(this, timeAndDateDelay);
             }
         });

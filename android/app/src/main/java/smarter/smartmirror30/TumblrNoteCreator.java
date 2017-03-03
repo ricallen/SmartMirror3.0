@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -51,12 +52,14 @@ public class TumblrNoteCreator {
                     String bodyString = postArray.getJSONObject(i).getString("body");
                     SmartMirrorTextView bodyTxt = new SmartMirrorTextView(context);
                     bodyTxt.setText(Html.fromHtml(bodyString));
+                    bodyTxt.setTextSize(context.getResources().getDimension(R.dimen.textview_body_size));
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT);
                     params.addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE);
                     relativeLayout.addView(bodyTxt, params);
                     String headerString = Html.fromHtml(postArray
                             .getJSONObject(0).getString("title")).toString();
+                    header.setGravity(Gravity.LEFT);
                     header.setText(headerString);
                     break;
                 }
@@ -64,6 +67,7 @@ public class TumblrNoteCreator {
                     photoPost(postArray, i);
                     String headerString = postArray.getJSONObject(i)
                             .getJSONObject("reblog").getString("comment").replace("<p>", "").replace("</p>", "");
+                    header.setGravity(Gravity.CENTER_HORIZONTAL);
                     header.setText(headerString);
                     break;
                 }
@@ -100,8 +104,8 @@ public class TumblrNoteCreator {
 
     public void photoPost(JSONArray postArray, int i){
         ImageView imageView = new ImageView(context);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         relativeLayout.addView(imageView, params);
         String url = null;
@@ -116,6 +120,7 @@ public class TumblrNoteCreator {
                 .load( url )
                 .placeholder( getPlaceHolderImage() )
                 .error( R.drawable.error )
+                .fitCenter()
                 .into( imageView );
     }
 
