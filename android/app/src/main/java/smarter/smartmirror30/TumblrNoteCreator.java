@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 /**
  * Created by Ric on 02/03/2017.
@@ -46,7 +49,7 @@ public class TumblrNoteCreator {
             for (int i = 0; i<postArray.length(); i++){
                 if (postArray.getJSONObject(i).getString("type").equals("text")){
                     String bodyString = postArray.getJSONObject(i).getString("body");
-                    TextView bodyTxt = new TextView(context);
+                    SmartMirrorTextView bodyTxt = new SmartMirrorTextView(context);
                     bodyTxt.setText(Html.fromHtml(bodyString));
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.MATCH_PARENT);
@@ -60,7 +63,7 @@ public class TumblrNoteCreator {
                 else if (postArray.getJSONObject(i).getString("type").equals("photo")){
                     photoPost(postArray, i);
                     String headerString = postArray.getJSONObject(i)
-                            .getString("caption").replace("<p>", "").replace("</p>", "");
+                            .getJSONObject("reblog").getString("comment").replace("<p>", "").replace("</p>", "");
                     header.setText(headerString);
                     break;
                 }
@@ -96,39 +99,35 @@ public class TumblrNoteCreator {
     }
 
     public void photoPost(JSONArray postArray, int i){
-        photoPullListener = new PhotoPullListener() {
-            @Override
-            public void onPhotoPulled(final Bitmap bitmap) {
-                if (bitmap!=null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            ImageView imageView = new ImageView(context);
-                            imageView.setImageBitmap(bitmap);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.MATCH_PARENT);
-                            params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                            relativeLayout.addView(imageView, params);
-                        }
-                    });
-                }
-            }
-        };
+        ImageView imageView = new ImageView(context);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        relativeLayout.addView(imageView, params);
         String url = null;
         try {
             url = postArray.getJSONObject(i).getJSONArray("photos").getJSONObject(0)
-                    .getJSONArray("alt_sizes").getJSONObject(1).getString("url");
+                    .getJSONArray("alt_sizes").getJSONObject(0).getString("url");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        final String finalUrl = url;
-        Log.i("-->", "url src: " + url);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getBitmapFromURL(finalUrl);
-            }
-        }).start();
+        Glide
+                .with( context )
+                .load( url )
+                .placeholder( getPlaceHolderImage() )
+                .error( R.drawable.error )
+                .into( imageView );
+    }
+
+    private int getPlaceHolderImage(){
+        Random rand = new Random();
+        int randomNum = rand.nextInt((1) + 1);
+        switch (randomNum){
+            case 0: return R.drawable.icecream;
+            case 1: return R.drawable.cooldudes;
+            case 2: return R.drawable.summer;
+            default: return R.drawable.summer;
+        }
     }
 
 }

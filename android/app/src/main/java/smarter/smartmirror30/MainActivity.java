@@ -23,6 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class MainActivity extends FragmentActivity {
 
     private Values values;
@@ -54,6 +57,11 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/Quicksand-Regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build()
+        );
         setContentView(R.layout.activity_main);
         values = Values.getInstance();
         handler = new Handler();
@@ -157,7 +165,7 @@ public class MainActivity extends FragmentActivity {
 
     private void updateTimeAndDate(){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM", getResources().getConfiguration().locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMM", getResources().getConfiguration().locale);
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", getResources().getConfiguration().locale);
         date.setText(dateFormat.format(c.getTime()));
         time.setText(timeFormat.format(c.getTime()));
@@ -267,6 +275,11 @@ public class MainActivity extends FragmentActivity {
         public int getCount() {
             return 3;
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
 }

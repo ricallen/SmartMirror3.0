@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="smarter.smartmirror30.MainActivity"
     android:background="@color/colorPrimary"
-    android:padding="15dp">
+    android:padding="30dp">
 
     <LinearLayout
         android:orientation="vertical"

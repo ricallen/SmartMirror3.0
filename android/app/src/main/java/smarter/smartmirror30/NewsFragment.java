@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 public class NewsFragment extends Fragment {
 
@@ -50,4 +52,5 @@ public class NewsFragment extends Fragment {
             }
         }
     }
+
 }
