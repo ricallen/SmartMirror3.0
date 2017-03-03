@@ -1,4 +1,4 @@
-# SmartMirror3.0
+# Smart Mirror 3.0
 
 ## Intended for use in smart mirror applications using android tablets running Android 4.1 and above.
 
